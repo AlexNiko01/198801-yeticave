@@ -1,7 +1,7 @@
 # Личный проект «YetiCave» 
 
 * Студент: [Alexandra Semenchuk](https://up.htmlacademy.ru/php/2/user/198801).
-* Наставник: `Неизвестно`.
+* Наставник: `Андрей Алференков` https://htmlacademy.ru/profile/id103710.
 
 ---
 
