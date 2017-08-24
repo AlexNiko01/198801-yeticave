@@ -18,6 +18,7 @@ $now = strtotime('now');
 $interval = $tomorrow - $now;
 // далее нужно вычислить оставшееся время до начала следующих суток и записать его в переменную $lot_time_remaining
 // ...
+
 $lot_time_remaining = gmdate('H:i',$interval);
 ?>
 <!DOCTYPE html>
