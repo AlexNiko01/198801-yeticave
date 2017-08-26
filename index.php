@@ -19,7 +19,7 @@ $interval = $tomorrow - $now;
 // далее нужно вычислить оставшееся время до начала следующих суток и записать его в переменную $lot_time_remaining
 // ...
 
-$lot_time_remaining = gmdate('H:i',$interval);
+$lot_time_remaining = gmdate('H:i', $interval);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -46,10 +46,10 @@ $lot_time_remaining = gmdate('H:i',$interval);
         <nav class="user-menu">
             <?php if ($is_auth): ?>
                 <div class="user-menu__image">
-                    <img src="<?=$user_avatar; ?>" width="40" height="40" alt="Пользователь">
+                    <img src="<?= $user_avatar; ?>" width="40" height="40" alt="Пользователь">
                 </div>
                 <div class="user-menu__logged">
-                    <p><?=$user_name; ?></p>
+                    <p><?= $user_name; ?></p>
                 </div>
 
             <?php else : ?>
@@ -95,29 +95,65 @@ $lot_time_remaining = gmdate('H:i',$interval);
     <section class="lots">
         <div class="lots__header">
             <h2>Открытые лоты</h2>
+            <?php $cats = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'] ?>
             <select class="lots__select">
-                <option>Все категории</option>
-                <option>Доски и лыжи</option>
-                <option>Крепления</option>
-                <option>Ботинки</option>
-                <option>Одежда</option>
-                <option>Инструменты</option>
-                <option>Разное</option>
+                <?php foreach ($cats as $cat): ?>
+                    <option><?= $cat; ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <ul class="lots__list">
+            <?php $products = [
+                [
+                    'title' => '2014 Rossignol District Snowboard',
+                    'cat' => 'Доски и лыжи',
+                    'price' => '10999',
+                    'img_url' => 'img/lot-1.jpg'
+                ],
+                [
+                    'title' => 'DC Ply Mens 2016/2017 Snowboard',
+                    'cat' => 'Доски и лыжи',
+                    'price' => '159999',
+                    'img_url' => 'img/lot-2.jpg'
+                ],
+                [
+                    'title' => 'Крепления Union Contact Pro 2015 года размер L/XL',
+                    'cat' => 'Крепления',
+                    'price' => '8000',
+                    'img_url' => 'img/lot-3.jpg'
+                ],
+                [
+                    'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
+                    'cat' => 'Ботинки',
+                    'price' => '10999',
+                    'img_url' => 'img/lot-4.jpg'
+                ],
+                [
+                    'title' => 'Куртка для сноуборда DC Mutiny Charocal',
+                    'cat' => 'Одежда',
+                    'price' => '7500',
+                    'img_url' => 'img/lot-5.jpg'
+                ],
+                [
+                    'title' => 'Маска Oakley Canopy',
+                    'cat' => 'Разное',
+                    'price' => '5400',
+                    'img_url' => 'img/lot-6.jpg'
+                ],
+            ] ?>
+            <?php foreach ($products as $product): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="img/lot-1.jpg" width="350" height="260" alt="Сноуборд">
+                    <img src="<?= $product['img_url']; ?>" width="350" height="260" alt="Сноуборд">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category">Доски и лыжи</span>
-                    <h3 class="lot__title"><a class="text-link" href="lot.html">2014 Rossignol District Snowboard</a>
+                    <span class="lot__category"><?= $product['cat']; ?></span>
+                    <h3 class="lot__title"><a class="text-link" href="lot.html"><?= $product['title']; ?></a>
                     </h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost">10 999<b class="rub">р</b></span>
+                            <span class="lot__cost"><?= $product['price']; ?><b class="rub">р</b></span>
                         </div>
                         <div class="lot__timer timer">
                             <?= $lot_time_remaining; ?>
@@ -125,6 +161,7 @@ $lot_time_remaining = gmdate('H:i',$interval);
                     </div>
                 </div>
             </li>
+            <?php endforeach; ?>
         </ul>
     </section>
 </main>
