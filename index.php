@@ -1,4 +1,5 @@
 <?php
+require_once 'functions.php';
 $is_auth = (bool)rand(0, 1);
 
 $user_name = 'Константин';
@@ -60,9 +61,10 @@ $products = [
     ],
 ];
 
-require_once 'functions.php';
-$user_menu = getTemplate('templates/user-menu.php',['user_name' => $user_name, 'user_avatar' => $user_avatar, 'is_auth' => $is_auth]);
+$user_data = compact('user_name', 'user_avatar', 'is_auth');
+
+$user_menu = getTemplate('templates/user-menu.php', $user_data);
 $content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'lot_time_remaining' => $lot_time_remaining]);
 
-$layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => 'Главная', 'user_menu' =>$user_menu]);
+$layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => 'Главная', 'user_menu' => $user_menu]);
 print $layout;

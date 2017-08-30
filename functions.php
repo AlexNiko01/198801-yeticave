@@ -1,5 +1,5 @@
 <?php
-function getTemplate($url, $args)
+function getTemplate($url, $args = [])
 {
     if (!file_exists($url)) {
         return '';
@@ -13,7 +13,7 @@ function getTemplate($url, $args)
     return $content;
 }
 
-function getContent($content)
+function filterContent($content)
 {
     return htmlentities($content, ENT_QUOTES, "UTF-8");
 }
