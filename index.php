@@ -1,5 +1,7 @@
 <?php
 require_once 'functions.php';
+require_once 'models/products.php';
+$products = getAllProducts();
 $is_auth = (bool)rand(0, 1);
 
 $user_name = 'Константин';
@@ -22,48 +24,12 @@ $interval = $tomorrow - $now;
 
 $lot_time_remaining = gmdate('H:i', $interval);
 $cats = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-$products = [
-    [
-        'title' => '2014 Rossignol District Snowboard',
-        'cat' => 'Доски и лыжи',
-        'price' => '10999',
-        'img_url' => 'img/lot-1.jpg'
-    ],
-    [
-        'title' => 'DC Ply Mens 2016/2017 Snowboard',
-        'cat' => 'Доски и лыжи',
-        'price' => '159999',
-        'img_url' => 'img/lot-2.jpg'
-    ],
-    [
-        'title' => 'Крепления Union Contact Pro 2015 года размер L/XL',
-        'cat' => 'Крепления',
-        'price' => '8000',
-        'img_url' => 'img/lot-3.jpg'
-    ],
-    [
-        'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
-        'cat' => 'Ботинки',
-        'price' => '10999',
-        'img_url' => 'img/lot-4.jpg'
-    ],
-    [
-        'title' => 'Куртка для сноуборда DC Mutiny Charocal',
-        'cat' => 'Одежда',
-        'price' => '7500',
-        'img_url' => 'img/lot-5.jpg'
-    ],
-    [
-        'title' => 'Маска Oakley Canopy',
-        'cat' => 'Разное',
-        'price' => '5400',
-        'img_url' => 'img/lot-6.jpg'
-    ],
-];
+
 
 $user_data = compact('user_name', 'user_avatar', 'is_auth');
 
 $user_menu = getTemplate('templates/user-menu.php', $user_data);
+
 $content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'lot_time_remaining' => $lot_time_remaining]);
 
 $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => 'Главная', 'user_menu' => $user_menu]);
