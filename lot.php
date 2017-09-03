@@ -11,9 +11,14 @@ $user_avatar = 'img/user.jpg';
 $user_data = compact('user_name', 'user_avatar', 'is_auth');
 
 $user_menu = getTemplate('templates/user-menu.php', $user_data);
+$product = null;
+$id = null;
 
-$id = $_GET['id'];
-$product = getSingleProduct($id);
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $product = getSingleProduct($id);
+}
+
 if ($product) {
     $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product]);
     $title = $product['title'];
