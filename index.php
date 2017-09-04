@@ -1,7 +1,9 @@
 <?php
 require_once 'functions.php';
 require_once 'models/products.php';
+require_once 'models/cats.php';
 $products = getAllProducts();
+$cats = getAllCategories();
 $is_auth = (bool)rand(0, 1);
 
 $user_name = 'Константин';
@@ -23,8 +25,6 @@ $interval = $tomorrow - $now;
 // ...
 
 $lot_time_remaining = gmdate('H:i', $interval);
-$cats = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-
 
 $user_data = compact('user_name', 'user_avatar', 'is_auth');
 

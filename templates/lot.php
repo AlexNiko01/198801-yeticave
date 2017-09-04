@@ -26,10 +26,19 @@
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <img src="<?= $product['img_url'] ?>" width="730" height="548" alt="Сноуборд">
+                    <?php if($product['img_url']): ?>
+                    <img src="<?= $product['img_url'] ?>" width="730" height="548" alt="Сноуборд"
+                         style="width: 100%;height: auto;">
+                    <?php else: ?>
+                        <img src="http://placehold.it/730x550" />
+                    <?php endif; ?>
                 </div>
                 <p class="lot-item__category">Категория: <span><?= $product['cat'] ?></span></p>
-                <p class="lot-item__description">Легкий маневренный сноуборд, готовый дать жару в любом парке, растопив
+                <p class="lot-item__description">
+                    <?php if ($product['descr'] != ''): ?>
+                        <?= $product['descr']; ?>
+                    <?php else: ?>
+                    Легкий маневренный сноуборд, готовый дать жару в любом парке, растопив
                     снег
                     мощным щелчкоми четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях, наделяет этот
                     снаряд
@@ -39,6 +48,7 @@
                     просто
                     посмотрите на Вашу доску и улыбнитесь, крутая графика от Шона Кливера еще никого не оставляла
                     равнодушным.</p>
+                <?php endif; ?>
             </div>
             <div class="lot-item__right">
                 <div class="lot-item__state">
