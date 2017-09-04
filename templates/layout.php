@@ -29,9 +29,9 @@ header("Content-Type: text/html; charset=utf-8");
     </div>
 </header>
 
-<main class="container">
+
     <?= $content; ?>
-</main>
+
 
 <footer class="main-footer">
     <nav class="nav">
