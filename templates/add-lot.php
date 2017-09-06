@@ -1,9 +1,3 @@
-<?php
-$required_text = 'Заполните это поле';
-$rules_text = 'Данное значение должно быть числовым';
-$errors_required = $errors['errors_required'];
-$errors_rules = $errors['errors_rules'];
-?>
 <main>
     <nav class="nav">
         <ul class="nav__list container">
@@ -28,20 +22,22 @@ $errors_rules = $errors['errors_rules'];
         </ul>
     </nav>
 
-    <form class="form form--add-lot container <?= !empty($errors_required) || !empty($errors_rules) ? 'form--invalid' : '' ?>"
-          action="/add.php" method="post" enctype="multipart/form-data">
+    <form class="form form--add-lot container <?= !empty($errors) ? 'form--invalid' : '' ?>"
+          action="/add.php" method="post" enctype="multipart/form-data" novalidate>
         <h2>Добавление лота</h2>
         <div class="form__container-two">
-            <div class="form__item <?= in_array('lot-name', $errors_required) ? 'form__item--invalid' : ''; ?>">
+            <div class="form__item <?= key_exists('lot-name', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="lot-name">Наименование</label>
                 <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота"
                        value="<?= $_POST['lot-name'] ?? ''; ?>">
-                <?php if (in_array('lot-name', $errors_required)): ?>
-                    <span class="form__error"><?= $required_text; ?></span>
+                <?php if (key_exists('lot-name', $errors)): ?>
+                    <span class="form__error">
+                        <?php echo implode(', ', $errors['lot-name']) ?>
+                    </span>
                 <?php endif; ?>
 
             </div>
-            <div class="form__item <?= in_array('category', $errors_required) ? 'form__item--invalid' : ''; ?>">
+            <div class="form__item <?= key_exists('category', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="category">Категория</label>
                 <select id="category" name="category">
                     <option selected value="">Выберите категорию</option>
@@ -49,17 +45,21 @@ $errors_rules = $errors['errors_rules'];
                         <option value="<?= $cat; ?>" <?= $_POST['category'] == $cat ? 'selected' : '' ?>><?= $cat; ?></option>
                     <?php endforeach; ?>
                 </select>
-                <?php if (in_array('category', $errors_required)): ?>
-                    <span class="form__error"><?= $required_text; ?></span>
+                <?php if (key_exists('category', $errors)): ?>
+                    <span class="form__error">
+                        <?php echo implode(', ', $errors['category']) ?>
+                    </span>
                 <?php endif; ?>
             </div>
         </div>
-        <div class="form__item form__item--wide <?= in_array('message', $errors_required) ? 'form__item--invalid' : ''; ?>">
+        <div class="form__item form__item--wide <?= key_exists('message', $errors) ? 'form__item--invalid' : ''; ?>">
             <label for="message">Описание</label>
             <textarea id="message" name="message"
                       placeholder="Напишите описание лота"><?= $_POST['message'] ?? ''; ?></textarea>
-            <?php if (in_array('message', $errors_required)): ?>
-                <span class="form__error"><?= $required_text; ?></span>
+            <?php if (key_exists('message', $errors)): ?>
+                <span class="form__error">
+                        <?php echo implode(', ', $errors['message']) ?>
+                    </span>
             <?php endif; ?>
         </div>
         <div class="form__item form__item--file <?= $file_error_text ? 'form__item--invalid' : ''; ?>">
@@ -81,34 +81,34 @@ $errors_rules = $errors['errors_rules'];
             <?php endif; ?>
         </div>
         <div class="form__container-three">
-            <div class="form__item form__item--small <?= (in_array('lot-rate', $errors_required) || in_array('lot-rate', $errors_rules)) ? 'form__item--invalid' : ''; ?>">
+            <div class="form__item form__item--small <?= key_exists('lot-rate', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="lot-rate">Начальная цена</label>
                 <input id="lot-rate" type="number" name="lot-rate" placeholder="0"
                        value="<?= $_POST['lot-rate'] ?? ''; ?>">
-                <?php if (in_array('lot-rate', $errors_required)): ?>
-                    <span class="form__error"><?= $required_text; ?></span>
-                <?php endif; ?>
-                <?php if (in_array('lot-rate', $errors_rules)): ?>
-                    <span class="form__error"><?= $rules_text; ?></span>
+                <?php if (key_exists('lot-rate', $errors)): ?>
+                    <span class="form__error">
+                        <?php echo implode(', ',$errors['lot-rate']) ?>
+                    </span>
                 <?php endif; ?>
             </div>
-            <div class="form__item form__item--small <?= (in_array('lot-step', $errors_required) || in_array('lot-step', $errors_rules)) ? 'form__item--invalid' : ''; ?>">
+            <div class="form__item form__item--small <?= key_exists('lot-step', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="lot-step">Шаг ставки</label>
                 <input id="lot-step" type="number" name="lot-step" placeholder="0"
                        value="<?= $_POST['lot-step'] ?? ''; ?>">
-                <?php if (in_array('lot-step', $errors_required)): ?>
-                    <span class="form__error"><?= $required_text; ?></span>
-                <?php endif; ?>
-                <?php if (in_array('lot-step', $errors_rules)): ?>
-                    <span class="form__error"><?= $rules_text; ?></span>
+                <?php if (key_exists('lot-step', $errors)): ?>
+                    <span class="form__error">
+                        <?php echo implode(', ',$errors['lot-step']) ?>
+                    </span>
                 <?php endif; ?>
             </div>
-            <div class="form__item <?= in_array('lot-date', $errors_required) ? 'form__item--invalid' : ''; ?>">
+            <div class="form__item <?= key_exists('lot-date', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="lot-date">Дата завершения</label>
                 <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017"
                        value="<?= $_POST['lot-date'] ?? ''; ?>">
-                <?php if (in_array('lot-date', $errors_required)): ?>
-                    <span class="form__error"><?= $required_text; ?></span>
+                <?php if (key_exists('lot-date', $errors)): ?>
+                    <span class="form__error">
+                        <?php echo implode(', ',$errors['lot-date']) ?>
+                    </span>
                 <?php endif; ?>
             </div>
         </div>

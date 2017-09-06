@@ -18,6 +18,19 @@ function filterContent($content)
     return htmlentities($content, ENT_QUOTES, "UTF-8");
 }
 
+function renderLayout($content)
+{
+    $is_auth = (bool)rand(0, 1);
+    $user_name = 'Константин';
+    $user_avatar = 'img/user.jpg';
+
+    $user_data = compact('user_name', 'user_avatar', 'is_auth');
+
+    $user_menu = getTemplate('templates/user-menu.php', $user_data);
+    $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => 'Главная', 'user_menu' => $user_menu]);
+    print $layout;
+}
+
 function timeFormat($time)
 {
     $currentTime = strtotime('now');
@@ -59,36 +72,34 @@ function assureTimeFormatWords($time)
     return $interval . ' ' . $expression;
 }
 
-function validateNumeric($num)
-{
-    if (preg_match('/^[0-9\.\ ]+$/', $num)) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
-function formValidation()
+function formValidation($rules)
 {
-    $errors = ['errors_required' => [], 'errors_rules' => []];
-    $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
-    $has_rule = ['lot-rate' => 'validateNumeric', 'lot-step' => 'validateNumeric'];
+    $errors = [];
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        foreach ($required as $field) {
-            if ((isset($_POST[$field]) && $_POST[$field] == '') || !isset($_POST[$field])) {
-                $errors['errors_required'][] = $field;
-            }
-        }
-        foreach ($has_rule as $key => $value) {
-            if (isset($_POST[$key]) && $_POST[$key] != '') {
-                $validation = call_user_func($value, $_POST[$key]);
-                if (!$validation) {
-                    $errors['errors_rules'][] = $key;
+        foreach ($rules as $key => $rule) {
+            foreach ($rule as $singleRule) {
+                if ($singleRule === 'required') {
+                    if (!isset($_POST[$key]) || $_POST[$key] == '') {
+                        $errors[$key][] = 'Заполните это поле';
+                    }
                 }
-
+                if ($singleRule === 'numeric') {
+                    if (isset($_POST[$key])) {
+                        if (!filter_var($_POST[$key], FILTER_VALIDATE_FLOAT)) {
+                            $errors[$key][] = 'Данное значение должно быть числовым';
+                        }
+                    }
+                }
+                if ($singleRule === 'email') {
+                    if (isset($_POST[$key])) {
+                        if (!filter_var($_POST[$key], FILTER_VALIDATE_EMAIL)) {
+                            $errors[$key][] = 'Введите коректный email';
+                        }
+                    }
+                }
             }
         }
-
     }
     return $errors;
 }
@@ -117,9 +128,9 @@ function renderLotData()
     $lot_data = [];
     if (isset($_FILES['lot-file']['name']) && !empty($_FILES['lot-file']['name'])) {
         $file_name = $_FILES['lot-file']['name'];
-        $file_path = __DIR__ . '/img/';
-        $file_url = '/img/'.$file_name;
-        if(!file_exists($file_url)){
+        $file_path = __DIR__ . '/img/lots/';
+        $file_url = '/img/lots/' . $file_name;
+        if (!file_exists($file_url)) {
             move_uploaded_file($_FILES['lot-file']['tmp_name'], $file_path . $file_name);
         }
         $lot_data['img_url'] = $file_url;

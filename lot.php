@@ -4,13 +4,7 @@ require_once 'models/bets.php';
 require_once 'models/products.php';
 $bets = getAllBets();
 
-$is_auth = (bool)rand(0, 1);
-$user_name = 'Константин';
-$user_avatar = 'img/user.jpg';
 
-$user_data = compact('user_name', 'user_avatar', 'is_auth');
-
-$user_menu = getTemplate('templates/user-menu.php', $user_data);
 $product = null;
 $id = null;
 
@@ -28,6 +22,4 @@ if ($product) {
     die();
 }
 
-$layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => $title, 'user_menu' => $user_menu]);
-
-print $layout;
+renderLayout($content);
