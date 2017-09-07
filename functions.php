@@ -20,11 +20,10 @@ function filterContent($content)
 
 function renderLayout($content, $title)
 {
-    $is_auth = (bool)rand(0, 1);
     $user_name = 'Константин';
     $user_avatar = 'img/user.jpg';
 
-    $user_data = compact('user_name', 'user_avatar', 'is_auth');
+    $user_data = compact('user_name', 'user_avatar');
 
     $user_menu = getTemplate('templates/user-menu.php', $user_data);
     $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => $title, 'user_menu' => $user_menu]);
@@ -92,9 +91,9 @@ function formValidation($rules)
                     }
                 }
                 if ($singleRule === 'email') {
-                    if (isset($_POST[$key])) {
+                    if (isset($_POST[$key]) && !empty($_POST[$key])) {
                         if (!filter_var($_POST[$key], FILTER_VALIDATE_EMAIL)) {
-                            $errors[$key][] = 'Введите коректный email';
+                            $errors[$key][] = 'Введите корректный email';
                         }
                     }
                 }
@@ -140,4 +139,16 @@ function renderLotData()
     $lot_data['price'] = $_POST['lot-rate'];
     $lot_data['descr'] = $_POST['message'];
     return $lot_data;
+}
+
+function searchUserByEmail($email, $users)
+{
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
 }

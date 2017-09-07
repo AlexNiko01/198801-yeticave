@@ -1,18 +1,19 @@
-<?php if ($is_auth): ?>
+<?php if (isset($_SESSION['user'])): ?>
     <div class="user-menu__image">
         <img src="<?= $user_avatar; ?>" width="40" height="40" alt="Пользователь">
+
     </div>
     <div class="user-menu__logged">
-        <p><?= $user_name; ?></p>
+        <p><?= $_SESSION['user']; ?></p>
+        <a href="logout.php">Выйти</a>
     </div>
-
 <?php else : ?>
     <ul class="user-menu__list">
         <li class="user-menu__item">
             <a href="#">Регистрация</a>
         </li>
         <li class="user-menu__item">
-            <a href="#">Вход</a>
+            <a href="login.php">Вход</a>
         </li>
     </ul>
 <?php endif; ?>

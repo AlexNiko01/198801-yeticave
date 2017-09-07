@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'functions.php';
 require_once 'models/bets.php';
 require_once 'models/products.php';
@@ -13,6 +14,7 @@ if (isset($_GET['id'])) {
     $product = getSingleProduct($id);
 }
 $title = '';
+
 if ($product) {
     $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product]);
     $title = $product['title'];
@@ -21,5 +23,8 @@ if ($product) {
     include(__DIR__ . '/404.php');
     die();
 }
+renderLayout($content, $title);
 
-renderLayout($content,$title);
+
+
+
