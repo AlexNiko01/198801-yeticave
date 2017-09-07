@@ -18,7 +18,7 @@ function filterContent($content)
     return htmlentities($content, ENT_QUOTES, "UTF-8");
 }
 
-function renderLayout($content)
+function renderLayout($content, $title)
 {
     $is_auth = (bool)rand(0, 1);
     $user_name = 'Константин';
@@ -27,7 +27,7 @@ function renderLayout($content)
     $user_data = compact('user_name', 'user_avatar', 'is_auth');
 
     $user_menu = getTemplate('templates/user-menu.php', $user_data);
-    $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => 'Главная', 'user_menu' => $user_menu]);
+    $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => $title, 'user_menu' => $user_menu]);
     print $layout;
 }
 

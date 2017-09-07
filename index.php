@@ -18,4 +18,4 @@ $lot_time_remaining = gmdate('H:i', $interval);
 
 $content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'lot_time_remaining' => $lot_time_remaining]);
 
-renderLayout($content);
+renderLayout($content,'Главная');

@@ -37,4 +37,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors) && !$file_error_text)
     $content = getTemplate('templates/add-lot.php', ['cats' => $cats, 'errors' => $errors, 'file_error_text' => $file_error_text]);
 }
 
-renderLayout($content);
+renderLayout($content,'Добавление лота');

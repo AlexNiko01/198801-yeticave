@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $product = getSingleProduct($id);
 }
-
+$title = '';
 if ($product) {
     $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product]);
     $title = $product['title'];
@@ -22,4 +22,4 @@ if ($product) {
     die();
 }
 
-renderLayout($content);
+renderLayout($content,$title);
