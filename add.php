@@ -34,7 +34,7 @@ if (isset($_SESSION['user'])) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors) && !$file_error_text) {
         $product = renderLotData();
         $bets = getAllBets();
-        $content = getTemplate('templates/lot.php', ['bets' => $bets, 'product' => $product]);
+        $content = getTemplate('templates/lot.php', ['bets' => $bets, 'product' => $product,'errors' => $errors]);
     } else {
         $content = getTemplate('templates/add-lot.php', ['cats' => $cats, 'errors' => $errors, 'file_error_text' => $file_error_text]);
     }
