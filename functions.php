@@ -152,3 +152,11 @@ function searchUserByEmail($email, $users)
     }
     return $result;
 }
+function getRatedProducts($ratesList){
+
+    foreach ($ratesList as $key=>$rate){
+        $id = $rate['lot-id'];
+        $ratesList[$key]['product'] = getSingleProduct($id);
+    }
+    return $ratesList;
+}
