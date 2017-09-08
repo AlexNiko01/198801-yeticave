@@ -30,7 +30,7 @@ $rules = [
 $errors = formValidation($rules);
 $file_error_text = fileValidation();
 
-if (isset($_SESSION['user'])) {
+if (isUserAuthenticated()) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors) && !$file_error_text) {
         $product = renderLotData();
         $bets = getAllBets();
