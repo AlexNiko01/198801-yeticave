@@ -1,5 +1,5 @@
 <main>
-    <?php renderCatMenu(); ?>
+    <?= $catMenu;?>
     <section class="lot-item container">
         <h2><?= $product['title'] ?></h2>
         <div class="lot-item__content">
@@ -31,7 +31,7 @@
             </div>
             <div class="lot-item__right">
                 <?php
-                $idAtCookie = getLotIdFromCookie($_GET['id']);
+                $idAtCookie = checkLotIdAtCookie($_GET['id']);
                 ?>
                 <?php if (isUserAuthenticated() && $idAtCookie === false): ?>
                     <div class="lot-item__state">

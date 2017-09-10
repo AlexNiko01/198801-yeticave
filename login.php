@@ -2,6 +2,9 @@
 session_start();
 require_once 'functions.php';
 require_once 'userdata.php';
+require_once 'models/cats.php';
+$cats = getAllCategories();
+$catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
 $rules = [
     'email' => [
         'required',
@@ -31,5 +34,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
         }
     }
 }
-$content = getTemplate('templates/login.php', ['errors' => $errors, 'passwordErrorMessage' => $passwordErrorMessage]);
+$content = getTemplate('templates/login.php', ['errors' => $errors, 'passwordErrorMessage' => $passwordErrorMessage,'catMenu'=>$catMenu]);
 renderLayout($content, 'Вход');

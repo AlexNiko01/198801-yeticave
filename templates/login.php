@@ -1,5 +1,5 @@
 <main>
-    <?php renderCatMenu(); ?>
+    <?= $catMenu;?>
     <form class="form container <?= !empty($errors) ? 'form--invalid' : '' ?>" action="login.php" method="post">
         <!-- form--invalid -->
         <h2>Вход</h2>

@@ -3,9 +3,11 @@ session_start();
 require_once 'functions.php';
 require_once 'models/bets.php';
 require_once 'models/products.php';
+require_once 'models/cats.php';
+$cats = getAllCategories();
+$catMenu = getTemplate('templates/cat-menu.php',['cats' => $cats]);
+
 $bets = getAllBets();
-
-
 $product = null;
 $id = null;
 $rules = [
@@ -20,9 +22,8 @@ if (isset($_GET['id'])) {
     $product = getSingleProduct($id);
 }
 $title = '';
-
 if ($product) {
-    $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product, 'errors' => $errors]);
+    $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product, 'errors' => $errors,'catMenu' => $catMenu]);
     $title = $product['title'];
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
@@ -30,12 +31,10 @@ if ($product) {
         $lotData['cost'] = $_POST['cost'];
         $lotData['lot-id'] = $_POST['lot-id'];
         $lotData['data'] = $currentData;
-        $lotDataIsset[] =$lotData;
         if (isset($_COOKIE['lot_data'])) {
             $lotDataIsset = json_decode($_COOKIE['lot_data'], true);
-            $lotDataIsset[] = $lotData;
         }
-
+        $lotDataIsset[] = $lotData;
         setcookie('lot_data', json_encode($lotDataIsset), time() + 3600, "/");
         header("Location: mylots.php");
     }
