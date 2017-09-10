@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS `categories` (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (128) NOT NULL
+)CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `users` (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+registration_date DATETIME,
+name VARCHAR (128) NOT NULL,
+email VARCHAR (128) NOT NULL,
+password VARCHAR (60) NOT NULL,
+awatar VARCHAR (255),
+contacts VARCHAR (255)
+)CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `lots` (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (128) NOT NULL,
+creation_date DATETIME,
+expire_date DATETIME,
+description TEXT,
+photo VARCHAR (255),
+start_price DECIMAL(10, 2),
+rate_step DECIMAL,
+favourite_count INT UNSIGNED,
+category_id INTEGER,
+user_id INTEGER,
+winner_id INTEGER,
+CONSTRAINT FOREIGN KEY(category_id) REFERENCES categories(id),
+CONSTRAINT FOREIGN KEY(user_id) REFERENCES users(id),
+CONSTRAINT FOREIGN KEY(winner_id) REFERENCES users(id)
+)CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `rates` (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+date DATETIME,
+price DECIMAL(10, 2),
+user_id INTEGER,
+lot_id INTEGER,
+CONSTRAINT FOREIGN KEY(user_id) REFERENCES users(id),
+CONSTRAINT FOREIGN KEY(lot_id) REFERENCES lots(id)
+)CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
