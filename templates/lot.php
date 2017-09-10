@@ -1,36 +1,15 @@
 <main>
-    <nav class="nav">
-        <ul class="nav__list container">
-            <li class="nav__item">
-                <a href="">Доски и лыжи</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Крепления</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Ботинки</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Одежда</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Инструменты</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Разное</a>
-            </li>
-        </ul>
-    </nav>
+    <?= $catMenu;?>
     <section class="lot-item container">
         <h2><?= $product['title'] ?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <?php if($product['img_url']): ?>
-                    <img src="<?= $product['img_url'] ?>" width="730" height="548" alt="Сноуборд"
-                         style="width: 100%;height: auto;">
+                    <?php if ($product['img_url']): ?>
+                        <img src="<?= $product['img_url'] ?>" width="730" height="548" alt="Сноуборд"
+                             style="width: 100%;height: auto;">
                     <?php else: ?>
-                        <img src="http://placehold.it/730x550" />
+                        <img src="http://placehold.it/730x550"/>
                     <?php endif; ?>
                 </div>
                 <p class="lot-item__category">Категория: <span><?= $product['cat'] ?></span></p>
@@ -51,28 +30,36 @@
                 <?php endif; ?>
             </div>
             <div class="lot-item__right">
-                <?php if (isset($_SESSION['user'])): ?>
-                <div class="lot-item__state">
-                    <div class="lot-item__timer timer">
-                        10:54:12
-                    </div>
-                    <div class="lot-item__cost-state">
-                        <div class="lot-item__rate">
-                            <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost">11 500</span>
+                <?php
+                $idAtCookie = checkLotIdAtCookie($_GET['id']);
+                ?>
+                <?php if (isUserAuthenticated() && $idAtCookie === false): ?>
+                    <div class="lot-item__state">
+                        <div class="lot-item__timer timer">
+                            10:54:12
                         </div>
-                        <div class="lot-item__min-cost">
-                            Мин. ставка <span><?= $product['price'] ?></span>
+                        <div class="lot-item__cost-state">
+                            <div class="lot-item__rate">
+                                <span class="lot-item__amount">Текущая цена</span>
+                                <span class="lot-item__cost">11 500</span>
+                            </div>
+                            <div class="lot-item__min-cost">
+                                Мин. ставка <span><?= $product['price'] ?></span>
+                            </div>
                         </div>
+                        <form class="lot-item__form" action="lot.php?id=<?= $_GET['id'] ?>" method="post">
+                            <p class="lot-item__form-item <?= key_exists('cost', $errors) ? 'form__item--invalid' : '' ?>">
+                                <label for="cost">Ваша ставка</label>
+                                <input id="cost" type="number" name="cost" placeholder="12 000"
+                                       value="<?= $_POST['cost'] ?>">
+                                <?php if (key_exists('cost', $errors)): ?>
+                                    <span class="form__error"><?= implode(', ', $errors['cost']) ?></span>
+                                <?php endif; ?>
+                            </p>
+                            <input id="lot-id" type="hidden" name="lot-id" value="<?= $_GET['id'] ?>">
+                            <button type="submit" class="button">Сделать ставку</button>
+                        </form>
                     </div>
-                    <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
-                        <p class="lot-item__form-item">
-                            <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="number" name="cost" placeholder="12 000">
-                        </p>
-                        <button type="submit" class="button">Сделать ставку</button>
-                    </form>
-                </div>
                 <?php endif; ?>
                 <div class="history">
                     <h3>История ставок (<span>4</span>)</h3>
