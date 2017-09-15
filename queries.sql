@@ -11,4 +11,12 @@ INSERT INTO `lots`(`title`, `photo`, `start_price`) VALUES ( '2014 Rossignol Dis
 ( 'Крепления Union Contact Pro 2015 года размер L/XL' , 'img/lot-2.jpg', '15999'),
 
 -- adding rates
-INSERT INTO `rates`(`date`, `price`, `user_id`, `lot_id`) VALUES ('1505300969','9999','5','7' ),
+INSERT INTO `rates`(`date`, `price`, `user_id`, `lot_id`) VALUES ('1970-01-01 00:00:00',9999,1,24)
+
+-- get a list of all categories
+SELECT * FROM 'categories'
+
+-- get the newest, open lots. Each lot must include the name, starting price, image link, price, number of bets, category name;
+SELECT  name, start_price, photo, favourite_count, lots.category_id  FROM lots ORDER BY id DESC LIMIT 6;
+
+SELECT c.id, email, content FROM comments c JOIN users u ON c.user_id = u.id;

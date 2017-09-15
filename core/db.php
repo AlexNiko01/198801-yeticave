@@ -1,16 +1,13 @@
 <?php
-require_once '../models/cats.php';
-require_once '../models/products.php';
-require_once '../userdata.php';
+
 try {
     $dbh = new PDO('mysql:host=db;dbname=yeticave;charset=utf8', 'root', 'root');
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();
 }
-$cats = getAllCategories();
-$users = returnUsers();
-$products = getAllProducts();
+
+
 function insertCats($cats, $dbh)
 {
     $insertStatement = $dbh->prepare("INSERT INTO categories(name) VALUES( :name)");
@@ -21,16 +18,40 @@ function insertCats($cats, $dbh)
 
 //insertCats($cats, $dbh);
 
-function insertUsers($users, $dbh, $table)
-{
-    $insertStatement = $dbh->prepare("INSERT INTO $table(name, email, password) VALUES(:name, :email, :password)");
-    foreach ($users as $user) {
+$products = [
+    [
+        'title' => '2014 Rossignol District Snowboard',
+        'photo' => 'img/lot-1.jpg',
+        'start_price' => '10999'
+    ],
+    [
+        'title' => 'DC Ply Mens 2016/2017 Snowboard',
+        'photo' => 'img/lot-2.jpg',
+        'start_price' => '159999'
+    ],
+    [
+        'title' => 'Крепления Union Contact Pro 2015 года размер L/XL',
+        'photo' => 'img/lot-3.jpg',
+        'start_price' => '8000'
+    ],
+    [
+        'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
+        'photo' => 'img/lot-4.jpg',
+        'start_price' => '10999'
+    ],
+    [
+        'title' => 'Куртка для сноуборда DC Mutiny Charocal',
+        'photo' => 'img/lot-5.jpg',
+        'start_price' => '7500'
 
-        $insertStatement->execute($user);
-    }
-}
+    ],
+    [
+        'title' => 'Маска Oakley Canopy',
+        'photo' => 'img/lot-6.jpg',
+        'start_price' => '5400'
+    ],
+];
 
-//insertUsers($users, $dbh, 'users');
 
 function insertData($data, $dbh, $table, $fields)
 {
@@ -40,10 +61,25 @@ function insertData($data, $dbh, $table, $fields)
         $fieldBox[] = ':' . $field;
     }
     $fieldsString = implode(',', $fieldBox);
-    $insertStatement = $dbh->prepare("INSERT INTO $table($keys) VALUES($fieldsString)");
-    foreach ($data as $row) {
-        $insertStatement->execute($row);
+    $insertStatement = $dbh->prepare("INSERT INTO $table($keys) VALUES ($fieldsString)");
+    foreach ($data as $item) {
+        $insertStatement->execute($item);
+
     }
 }
 
 //insertData($products, $dbh, 'lots', ['title', 'photo', 'start_price']);
+function selectAllCats()
+{
+    $dbh = new PDO('mysql:host=db;dbname=yeticave;charset=utf8', 'root', 'root');
+    $insertStatement = $dbh->prepare('SELECT * FROM `categories`');
+    $insertStatement->execute();
+    $allCats = $insertStatement->fetchAll(PDO::FETCH_ASSOC);
+    return $allCats;
+
+}
+
+?>
+<!--<pre>-->
+<!--    --><?php //var_dump(selectAllCats()); ?>
+<!--</pre>-->
