@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'functions.php';
+require_once 'mysql_helper.php';
+require_once 'init.php';
 require_once 'models/products.php';
 require_once 'models/cats.php';
 $products = getAllProducts();
