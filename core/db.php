@@ -8,27 +8,29 @@ function returnMysqliConnect()
 
 $mysqliConnect = returnMysqliConnect();
 
-
 function select_data($mysqliConnect, $queryString, $arr = [])
 {
     $stmt = db_get_prepare_stmt($mysqliConnect, $queryString, $arr);
     $selectedData = [];
     if ($stmt != false) {
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             $selectedData[] = $row;
         }
+        mysqli_stmt_close($stmt);
+        mysqli_close($mysqliConnect);
         return $selectedData;
+
+
     } else {
+        mysqli_close($mysqliConnect);
         return $selectedData;
     }
-
 }
-//select_data($mysqliConnect, 'SELECT * FROM users WHERE id = ? AND name LIKE ?', [4, 'test']);
+
 
 function insert_data($mysqliConnect, $table, $arr = [])
-
 {
     $keysArr = [];
     foreach ($arr as $key => $value) {
@@ -43,27 +45,34 @@ function insert_data($mysqliConnect, $table, $arr = [])
     $queryString = "INSERT INTO $table ($keys) VALUES ($values)";
     $stmt = db_get_prepare_stmt($mysqliConnect, $queryString, $arr);
     if ($stmt != false) {
-        $stmt->execute();
+        mysqli_stmt_execute($stmt);
         $lastInsertedId = mysqli_insert_id($mysqliConnect);
         if (!empty($lastInsertedId)) {
+            mysqli_stmt_close($stmt);
+            mysqli_close($mysqliConnect);
             return $lastInsertedId;
         } else {
+            mysqli_stmt_close($stmt);
+            mysqli_close($mysqliConnect);
             return false;
         }
     } else {
+        mysqli_close($mysqliConnect);
         return false;
     }
-
 }
-
-//insert_data($mysqliConnect, 'users', [
-//    'emaile' => 'test3.v@gmail.com',
-//    'name' => 'test4',
-//    'password' => '$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka'
-//]);
 
 
 function exec_query($mysqliConnect, $queryString, $arr = [])
 {
+    $stmt = db_get_prepare_stmt($mysqliConnect, $queryString, $arr);
+    $result = false;
+    if ($stmt != false) {
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
 
+    mysqli_close($mysqliConnect);
+    return $result;
 }
+
