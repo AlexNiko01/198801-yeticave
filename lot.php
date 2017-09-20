@@ -35,7 +35,6 @@ if ($product) {
         $currentData = gmdate('d-m-y G:i:s', strtotime('now'));
         $id = $_SESSION['id'];
         $lastInsertedId = insert_data($mysqliConnect, 'rates', ['date' => $currentData, 'price' => $_POST['cost'], 'user_id' => $id, 'lot_id' => $_POST['lot-id']]);
-//        var_dump($lastInsertedId);
         header("Location: mylots.php");
     }
 } else {
