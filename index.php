@@ -1,22 +1,10 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'init.php';
-require_once 'models/products.php';
-require_once 'models/cats.php';
-$products = getAllProducts();
-$cats = getAllCategories();
+$mysqliConnect = returnMysqliConnect();
+$now = gmdate('Y-m-d H:i:s', strtotime('now'));
+$products = select_data($mysqliConnect, "SELECT lots.id, lots.title, lots.start_price, lots.photo,lots.expire_date, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE expire_date > '$now'  ORDER BY lots.id ASC LIMIT 6");
+$cats = select_data($mysqliConnect, 'SELECT * FROM categories');
 
-
-// устанавливаем часовой пояс в Московское время
-date_default_timezone_set('Europe/Moscow');
-// записать в эту переменную оставшееся время в этом формате (ЧЧ:ММ)
-$lot_time_remaining = "00:00";
-// временная метка для полночи следующего дня
-$tomorrow = strtotime('tomorrow midnight');
-$now = strtotime('now');
-$interval = $tomorrow - $now;
-$lot_time_remaining = gmdate('H:i', $interval);
-$content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'lot_time_remaining' => $lot_time_remaining]);
-
-renderLayout($content,'Главная');
+$content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products]);
+renderLayout($content, 'Главная', $cats);

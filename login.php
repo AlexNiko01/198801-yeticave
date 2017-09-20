@@ -1,10 +1,8 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'init.php';
-require_once 'userdata.php';
-require_once 'models/cats.php';
-$cats = getAllCategories();
+$mysqliConnect = returnMysqliConnect();
+$cats = select_data($mysqliConnect, 'SELECT * FROM categories');
 $catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
 $rules = [
     'email' => [
@@ -16,7 +14,6 @@ $rules = [
     ]
 ];
 $errors = formValidation($rules);
-$users = returnUsers();
 $passwordErrorMessage = '';
 
 
@@ -25,9 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
     if (!empty($_POST)) {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        if ($user = searchUserByEmail($email, $users)) {
+
+        if ($user = searchUserByEmail($email,$mysqliConnect)) {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $user['name'];
+                $_SESSION['id'] = $user['id'];
                 header("Location: index.php");
             } else {
                 $passwordErrorMessage = 'Вы ввели неверный пароль';

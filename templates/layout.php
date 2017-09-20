@@ -19,7 +19,9 @@
             <input class="main-header__search-btn" type="submit" name="find" value="Найти">
         </form>
         <?php if (isUserAuthenticated()): ?>
-            <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
+            <div>
+                <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
+            </div>
         <?php endif; ?>
         <nav class="user-menu">
             <?= $user_menu; ?>
@@ -34,24 +36,11 @@
 <footer class="main-footer">
     <nav class="nav">
         <ul class="nav__list container">
-            <li class="nav__item">
-                <a href="all-lots.html">Доски и лыжи</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Крепления</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Ботинки</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Одежда</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Инструменты</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Разное</a>
-            </li>
+            <?php foreach ($cats as $cat): ?>
+                <li class="nav__item">
+                    <a href="all-lots.html"><?= $cat['name']; ?></a>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </nav>
     <div class="main-footer__bottom container">

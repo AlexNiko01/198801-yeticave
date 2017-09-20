@@ -17,10 +17,11 @@
             </div>
             <div class="form__item <?= key_exists('category', $errors) ? 'form__item--invalid' : ''; ?>">
                 <label for="category">Категория</label>
+
                 <select id="category" name="category">
                     <option selected value="">Выберите категорию</option>
                     <?php foreach ($cats as $cat): ?>
-                        <option value="<?= $cat; ?>" <?= $_POST['category'] == $cat ? 'selected' : '' ?>><?= $cat; ?></option>
+                        <option value="<?= $cat['id']; ?>" <?= $_POST['category'] == $cat['name'] ? 'selected' : '' ?>><?= $cat['name']; ?></option>
                     <?php endforeach; ?>
                 </select>
                 <?php if (key_exists('category', $errors)): ?>

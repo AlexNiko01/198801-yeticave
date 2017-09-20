@@ -24,10 +24,10 @@ start_price DECIMAL(10, 2),
 rate_step INT UNSIGNED,
 favourite_count INT UNSIGNED,
 category_id INTEGER,
-autor_id INTEGER,
+author_id INTEGER,
 winner_id INTEGER,
 CONSTRAINT FOREIGN KEY(category_id) REFERENCES categories(id),
-CONSTRAINT FOREIGN KEY(autor_id) REFERENCES users(id),
+CONSTRAINT FOREIGN KEY(author_id) REFERENCES users(id),
 CONSTRAINT FOREIGN KEY(winner_id) REFERENCES users(id)
 )CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
