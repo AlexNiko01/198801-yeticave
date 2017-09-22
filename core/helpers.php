@@ -41,23 +41,26 @@ function assureTimeFormatWords($time)
 }
 
 
-
-
-function renderLotData()
+function saveUploadedFile($name, $path)
 {
-    $lot_data = [];
-    if (isset($_FILES['lot-file']['name']) && !empty($_FILES['lot-file']['name'])) {
-        $file_name = $_FILES['lot-file']['name'];
-        $file_path = __DIR__ . '/img/lots/';
-        $file_url = '/img/lots/' . $file_name;
+    if (isset($_FILES[$name]['name']) && !empty($_FILES[$name]['name'])) {
+        $file_name = $_FILES[$name]['name'];
+        $file_path = $_SERVER['DOCUMENT_ROOT'] . $path;
+        $file_url = $path . $file_name;
         if (!file_exists($file_url)) {
-            move_uploaded_file($_FILES['lot-file']['tmp_name'], $file_path . $file_name);
+            $fullPath = $file_path . '/' . $file_name;
+            move_uploaded_file($_FILES[$name]['tmp_name'], $fullPath);
+            return $path. '/' . $file_name;
         }
-        $lot_data['img_url'] = $file_url;
     }
-    $lot_data['title'] = $_POST['lot-name'];
-    $lot_data['cat'] = $_POST['category'];
-    $lot_data['price'] = $_POST['lot-rate'];
-    $lot_data['descr'] = $_POST['message'];
-    return $lot_data;
+    return false;
+}
+
+function getCurrentDate()
+{
+    $now = gmdate('Y-m-d H:i:s', strtotime('now'));
+    return $now;
+}
+function convertDateToBaseFormat($date){
+    return gmdate('Y-m-d H:i:s',strtotime($date));
 }

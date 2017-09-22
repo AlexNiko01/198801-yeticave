@@ -1,12 +1,16 @@
 <?php
-
 function returnMysqliConnect()
 {
-    $mysqliConnect = mysqli_connect('db', 'root', 'root', 'yeticave');
+    global $mysqliConnect;
+    if (!$mysqliConnect) {
+        $error = "Текст ошибки error: " . mysqli_connect_error() . PHP_EOL;
+        $content = getTemplate('templates/error.php', ['error' => $error]);
+        renderLayout($content, 'Error');
+        exit;
+    }
+    $mysqliConnect->set_charset("utf8");
     return $mysqliConnect;
 }
-
-$mysqliConnect = returnMysqliConnect();
 
 function select_data($mysqliConnect, $queryString, $arr = [])
 {
@@ -19,12 +23,9 @@ function select_data($mysqliConnect, $queryString, $arr = [])
             $selectedData[] = $row;
         }
         mysqli_stmt_close($stmt);
-        mysqli_close($mysqliConnect);
         return $selectedData;
 
-
     } else {
-        mysqli_close($mysqliConnect);
         return $selectedData;
     }
 }
@@ -32,10 +33,7 @@ function select_data($mysqliConnect, $queryString, $arr = [])
 
 function insert_data($mysqliConnect, $table, $arr = [])
 {
-    $keysArr = [];
-    foreach ($arr as $key => $value) {
-        $keysArr[] = $key;
-    }
+    $keysArr = array_keys($arr);
     $valuesArr = [];
     for ($i = count($arr); $i > 0; $i--) {
         $valuesArr[] = '?';
@@ -49,19 +47,15 @@ function insert_data($mysqliConnect, $table, $arr = [])
         $lastInsertedId = mysqli_insert_id($mysqliConnect);
         if (!empty($lastInsertedId)) {
             mysqli_stmt_close($stmt);
-            mysqli_close($mysqliConnect);
             return $lastInsertedId;
         } else {
             mysqli_stmt_close($stmt);
-            mysqli_close($mysqliConnect);
             return false;
         }
     } else {
-        mysqli_close($mysqliConnect);
         return false;
     }
 }
-
 
 function exec_query($mysqliConnect, $queryString, $arr = [])
 {

@@ -1,36 +1,43 @@
 <main>
-    <?= $catMenu;?>
+    <?= $catMenu; ?>
     <section class="rates container">
         <h2>Мои ставки</h2>
         <table class="rates__list">
             <?php foreach ($ratedProducts as $key => $rate): ?>
-                <?php if (!$rate['product']) {
-                    continue;
+                <?php $currentTime = strtotime('now');
+                $rateData = gmdate(strtotime($rate['expire_date']) - $currentTime);
+                $itemClass = ''; ?>
+                <?php if ($rateData < 0) {
+                    $itemClass = 'rates__item--end';
                 } ?>
-                <tr class="rates__item">
+                <tr class="rates__item <?= $itemClass; ?>">
                     <td class="rates__info">
                         <div class="rates__img">
-                            <img src="<?= $rate['product']['img_url']; ?>" width="54" height="40"
+                            <img src="<?= $rate['photo']; ?>" width="54" height="40"
                                  alt="Сноуборд">
                         </div>
-                        <h3 class="rates__title"><a href="lot.php?id=<?= $rate['lot-id'] ?>"><?= $rate['product']['title']; ?></a></h3>
+                        <h3 class="rates__title"><a href="lot.php?id=<?= $rate['lot_id'] ?>"><?= $rate['title']; ?></a>
+                        </h3>
                     </td>
                     <td class="rates__category">
-                        <?= $rate['product']['cat']; ?>
+                        <?= $rate['cat_name']; ?>
                     </td>
                     <td class="rates__timer">
-                        <div class="timer timer--finishing">07:13:34
-
-                        </div>
+                        <?php $timerClass = ''; ?>
+                        <?php if ($rateData <= 86400 && $rateData > 0): ?>
+                            <?php $timerClass = 'timer--finishing' ?>
+                        <?php endif; ?>
+                        <?php if ($rateData <= 86400): ?>
+                            <div class="timer <?= $timerClass; ?>">
+                                <?= gmdate('H:i:s', $rateData); ?>
+                            </div>
+                        <?php endif; ?>
                     </td>
                     <td class="rates__price">
-                        <?= $rate['cost'] . ' p'; ?>
+                        <?= $rate['price'] . ' p'; ?>
                     </td>
                     <td class="rates__time">
-                        <?php
-                        $currentTime = strtotime('now');
-                        $reteData = gmdate($currentTime - $rate['data']) ?>
-                        <?= timeFormat($reteData); ?>
+                        <?= $rate['date']; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

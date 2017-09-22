@@ -1,11 +1,9 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'init.php';
-require_once 'models/cats.php';
 require_once 'models/bets.php';
-require_once 'models/cats.php';
-$cats = getAllCategories();
+$mysqliConnect = returnMysqliConnect();
+$cats = select_data($mysqliConnect, 'SELECT * FROM categories');
 $catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
 
 
@@ -32,16 +30,27 @@ $rules = [
     ],
 ];
 $errors = formValidation($rules);
-$file_error_text = fileValidation();
+$file_error_text = fileValidation('lot-file');
+$currentUserId = $_SESSION['id'];
 
 if (isUserAuthenticated()) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors) && !$file_error_text) {
-        $product = renderLotData();
-        $bets = getAllBets();
-        $content = getTemplate('templates/lot.php', ['bets' => $bets, 'product' => $product, 'errors' => $errors, 'catMenu' => $catMenu]);
-    } else {
-        $content = getTemplate('templates/add-lot.php', ['cats' => $cats, 'errors' => $errors, 'file_error_text' => $file_error_text, 'catMenu' => $catMenu]);
+        $photoPath = saveUploadedFile('lot-file', '/img/lots');
+
+        $id = insert_data($mysqliConnect, 'lots', $arr = [
+            'title' => $_POST['lot-name'],
+            'creation_date' => getCurrentDate(),
+            'expire_date' => convertDateToBaseFormat($_POST['lot-date']),
+            'description' => $_POST['message'],
+            'photo' => $photoPath,
+            'start_price' => $_POST['lot-rate'],
+            'rate_step' => $_POST['lot-step'],
+            'category_id' => $_POST['category'],
+            'author_id' => $currentUserId,
+        ]);
+        header('Location: lot.php?id=' . $id);
     }
+    $content = getTemplate('templates/add-lot.php', ['cats' => $cats, 'errors' => $errors, 'file_error_text' => $file_error_text, 'catMenu' => $catMenu]);
     renderLayout($content, 'Добавление лота');
 
 } else {

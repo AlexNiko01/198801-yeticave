@@ -1,22 +1,25 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'init.php';
-require_once 'models/products.php';
-require_once 'models/cats.php';
-$products = getAllProducts();
-$cats = getAllCategories();
+$mysqliConnect = returnMysqliConnect();
+$now = gmdate('Y-m-d H:i:s', strtotime('now'));
+$cats = select_data($mysqliConnect, 'SELECT * FROM categories');
 
+$currentPage = 1;
+if (!empty($_GET['page'])) {
+    $currentPage = $_GET['page'];
+}
+$postPerPage = 3;
+$postsQuantity = count(select_data($mysqliConnect, "SELECT lots.id, lots.title, lots.start_price, lots.photo,lots.expire_date, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE expire_date > '$now'  ORDER BY lots.id ASC"));
+$pagesQuantity = ceil($postsQuantity / $postPerPage);
+$offset = ($currentPage - 1) * $postPerPage;
+$products = select_data($mysqliConnect, "SELECT lots.id, lots.title, lots.start_price, lots.photo,lots.expire_date, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE expire_date > '$now'  ORDER BY lots.id ASC LIMIT 3 OFFSET 0");
 
-// устанавливаем часовой пояс в Московское время
-date_default_timezone_set('Europe/Moscow');
-// записать в эту переменную оставшееся время в этом формате (ЧЧ:ММ)
-$lot_time_remaining = "00:00";
-// временная метка для полночи следующего дня
-$tomorrow = strtotime('tomorrow midnight');
-$now = strtotime('now');
-$interval = $tomorrow - $now;
-$lot_time_remaining = gmdate('H:i', $interval);
-$content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'lot_time_remaining' => $lot_time_remaining]);
+if (!empty($_GET['page'])) {
+    $products = select_data($mysqliConnect, "SELECT lots.id, lots.title, lots.start_price, lots.photo,lots.expire_date, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE expire_date > '$now'  ORDER BY lots.id ASC LIMIT 3 OFFSET $offset");
+}
 
-renderLayout($content,'Главная');
+$pagination = getTemplate('templates/pagination.php', ['pagesQuantity' => $pagesQuantity, 'currentPage' => $currentPage]);
+
+$content = getTemplate('templates/index.php', ['cats' => $cats, 'products' => $products, 'pagination' => $pagination]);
+renderLayout($content, 'Главная', $cats);

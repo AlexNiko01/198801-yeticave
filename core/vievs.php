@@ -18,14 +18,10 @@ function filterContent($content)
     return htmlentities($content, ENT_QUOTES, "UTF-8");
 }
 
-function renderLayout($content, $title)
+function renderLayout($content, $title, $cats=[])
 {
-    $user_name = 'Константин';
     $user_avatar = 'img/user.jpg';
-
-    $user_data = compact('user_name', 'user_avatar');
-
-    $user_menu = getTemplate('templates/user-menu.php', $user_data);
-    $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => $title, 'user_menu' => $user_menu]);
+    $user_menu = getTemplate('templates/user-menu.php', ['user_avatar' => $user_avatar]);
+    $layout = getTemplate('templates/layout.php', ['content' => $content, 'page_title' => $title, 'user_menu' => $user_menu, 'cats' => $cats]);
     print $layout;
 }

@@ -1,42 +1,40 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'init.php';
-require_once 'models/bets.php';
-require_once 'models/products.php';
-require_once 'models/cats.php';
-$cats = getAllCategories();
-$catMenu = getTemplate('templates/cat-menu.php',['cats' => $cats]);
+$mysqliConnect = returnMysqliConnect();
+$cats = select_data($mysqliConnect, 'SELECT * FROM `categories`');
+$catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
 
-$bets = getAllBets();
 $product = null;
 $id = null;
 $rules = [
     'cost' => [
         'required',
-        'numeric'
+        'numeric',
+        'min_rate'
     ]
 ];
 $errors = formValidation($rules);
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $product = getSingleProduct($id);
+    $product = select_data($mysqliConnect, "SELECT lots.id, lots.title,lots.expire_date, lots.start_price,lots.rate_step, lots.photo, lots.favourite_count, lots.description, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE lots.id = '$id'");
 }
 $title = '';
 if ($product) {
-    $content = getTemplate('templates/lot.php', ['bets' => $bets, 'id' => $id, 'product' => $product, 'errors' => $errors,'catMenu' => $catMenu]);
+    $product = array_shift($product);
+    $rates = select_data($mysqliConnect, "SELECT rates.date, rates.price, users.name AS name FROM rates LEFT JOIN users ON rates.user_id = users.id WHERE lot_id = '$id'");
+    $usersId = [];
+    if(isUserAuthenticated()){
+        $currentUserId = $_SESSION['id'];
+        $usersId = select_data($mysqliConnect, "SELECT user_id FROM rates WHERE lot_id = '$id' AND user_id = '$currentUserId'");
+    }
+    $content = getTemplate('templates/lot.php', ['rates' => $rates, 'id' => $id, 'product' => $product, 'errors' => $errors, 'catMenu' => $catMenu, 'usersId' => $usersId]);
     $title = $product['title'];
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
-        $currentData = strtotime('now');
-        $lotData['cost'] = $_POST['cost'];
-        $lotData['lot-id'] = $_POST['lot-id'];
-        $lotData['data'] = $currentData;
-        if (isset($_COOKIE['lot_data'])) {
-            $lotDataIsset = json_decode($_COOKIE['lot_data'], true);
-        }
-        $lotDataIsset[] = $lotData;
-        setcookie('lot_data', json_encode($lotDataIsset), time() + 3600, "/");
+        $currentData = gmdate('d-m-y G:i:s', strtotime('now'));
+        $id = $_SESSION['id'];
+        $lastInsertedId = insert_data($mysqliConnect, 'rates', ['date' => $currentData, 'price' => $_POST['cost'], 'user_id' => $id, 'lot_id' => $_POST['lot-id']]);
         header("Location: mylots.php");
     }
 } else {
@@ -45,4 +43,4 @@ if ($product) {
     die();
 }
 
-renderLayout($content, $title);
+renderLayout($content, $title, $cats);

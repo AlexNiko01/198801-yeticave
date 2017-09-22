@@ -1,4 +1,4 @@
---                                 Напишите запросы для добавления информации в БД:
+-- Напишите запросы для добавления информации в БД:
 -- Существующий список категорий
 INSERT INTO `categories`(`name`) VALUES ('Доски и лыжи'), ('Крепления'), ('Ботинки'), ('Одежда'), ('Инструменты'), ('Разное')
 
@@ -20,16 +20,15 @@ INSERT INTO `rates`(`date`, `price`, `user_id`, `lot_id`) VALUES ('2017-01-01 00
 
 
 
-
-
 -- получить список из всех категорий;
-SELECT * FROM `categories` WHERE 1
+SELECT * FROM `categories`
 
 -- получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, количество ставок, название категории;
-SELECT  title, start_price, photo, favourite_count, lots.category_id  FROM lots ORDER BY id DESC LIMIT 6;
+$now = gmdate('Y-m-d H:i:s',strtotime('now'));
+$products = select_data($mysqliConnect, "SELECT lots.id, lots.title, lots.start_price, lots.photo, lots.favourite_count, lots.category_id, categories.name AS cat FROM lots LEFT JOIN categories ON categories.id=lots.category_id WHERE expire_date > '$now'  ORDER BY lots.id ASC");
 
 -- найти лот по его названию или описанию;
-SELECT * FROM `lots` WHERE title = 'Маска Oakley Canopy'
+SELECT * FROM `lots` WHERE title = 'Маска Oakley Canopy' OR description = 'Легкий маневренный сноуборд, готовый дать жару в любом парке, растопив снег мощным щелчкоми четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях, наделяет этот снаряд отличной гибкостью и отзывчивостью, а симметричная геометрия в сочетании с классическим прогибом кэмбер позволит уверенно держать высокие скорости. А если к концу катального дня сил совсем не останется, просто посмотрите на Вашу доску и улыбнитесь, крутая графика от Шона Кливера еще никого не оставляла равнодушным.'
 
 -- обновить название лота по его идентификатору;
 UPDATE `lots` SET title = 'test' WHERE id = 1
