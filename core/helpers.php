@@ -76,7 +76,7 @@ function determineWinners()
     if (!empty($productsId)) {
         foreach ($productsId as $productId) {
             $id = $productId['id'];
-            $lastRate = select_data($mysqliConnect, "SELECT rates.user_id, rates.lot_id, users.email, lots.title, rates.price FROM rates JOIN users ON rates.user_id = users.id JOIN lots ON rates.lot_id = lots.id 
+            $lastRate = select_data($mysqliConnect, "SELECT rates.user_id, rates.lot_id, users.email, users.name, lots.title, rates.price FROM rates JOIN users ON rates.user_id = users.id JOIN lots ON rates.lot_id = lots.id 
 WHERE price = (SELECT MAX(price) FROM rates WHERE lot_id = '$id') AND lot_id = '$id' ");
             if (!empty($lastRate)) {
                 $lastRatesAuthorsData[] = $lastRate;
@@ -91,11 +91,40 @@ WHERE price = (SELECT MAX(price) FROM rates WHERE lot_id = '$id') AND lot_id = '
             $winnersId[] = $lastRatesAuthorData[0]['user_id'];
             $lotId = $lastRatesAuthorData[0]['lot_id'];
             exec_query($mysqliConnect, "UPDATE lots SET winner_id = ? WHERE id = $lotId", $arr = ['winner_id' => $lastRatesAuthorData[0]['user_id']]);
-
-            $message = "Поздравляем ваша ставка на лот $lastRatesAuthorData[0]['title'] выиграла";
-            mail($lastRatesAuthorData[0]['email'], 'ваша ставка выиграла', $message);
+            sendWinnerEmail($lastRatesAuthorData[0]);
         }
     }
+}
+
+function sendWinnerEmail($lotData, $subject = 'ваша ставка победила')
+{
+    $mailerEmail = 'doingsdone@mail.ru';
+    $email = $lotData['email'];
+
+    $name = $lotData['name'];
+    $lot_name = $lotData['title'];
+    $mylots_link = SITE_URL . '/mylots.php';
+    $lot_link = SITE_URL . '/lot.php?id=' . $lotData['lot_id'];
+    $data = compact('name', 'email', 'lot_name', 'mylots_link', 'lot_link');
+    $messageBody = getTemplate('templates/email.php', $data);
+
+    $transport = (new Swift_SmtpTransport('smtp.mail.ru', 465))
+        ->setUsername('doingsdone@mail.ru')
+        ->setPassword('rds7BgcL');
+
+    $mailer = new Swift_Mailer($transport);
+
+    $message = (new Swift_Message($subject))
+        ->setFrom($mailerEmail)
+        ->setTo([$email => $name])
+        ->setBody($messageBody,
+            'text/html');
+    try{
+        $mailer->send($message);
+    }catch (Exception $exception){
+        var_dump($exception);
+    };
+
 
 }
 
