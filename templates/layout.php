@@ -14,9 +14,10 @@
         <a class="main-header__logo" href="index.php">
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
-        <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru">
-            <input type="search" name="search" placeholder="Поиск лота">
-            <input class="main-header__search-btn" type="submit" name="find" value="Найти">
+        <form class="main-header__search" method="get" action="/search.php">
+            <input type="search" name="search" placeholder="Поиск лота"
+                   value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
+            <input class="main-header__search-btn" type="submit" name="find">
         </form>
         <?php if (isUserAuthenticated()): ?>
             <div>
@@ -29,20 +30,14 @@
     </div>
 </header>
 
-
+<?php if ($_SERVER['REQUEST_URI'] != '/index.php'): ?>
+    <?= $catMenu; ?>
+<?php endif; ?>
 <?= $content; ?>
 
 
 <footer class="main-footer">
-    <nav class="nav">
-        <ul class="nav__list container">
-            <?php foreach ($cats as $cat): ?>
-                <li class="nav__item">
-                    <a href="all-lots.html"><?= $cat['name']; ?></a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+    <?= $catMenu; ?>
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2017, YetiCave</p>

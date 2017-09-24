@@ -1,28 +1,11 @@
 <main class="container">
-    <section class="promo">
-        <h2 class="promo__title">Нужен стафф для катки?</h2>
-        <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное
-            снаряжение.</p>
-        <ul class="promo__list">
-            <?php foreach ($cats as $cat): ?>
-                <li class="promo__item promo__item--boards">
-                    <a class="promo__link" href="category.php?cat_id=<?= $cat['id']; ?>"
-                       style="background-image: url(../img/category-<?= $cat['id']; ?>.jpg);"><?= $cat['name']; ?></a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </section>
     <section class="lots">
         <div class="lots__header">
-            <h2>Открытые лоты</h2>
-            <select class="lots__select">
-                <?php foreach ($cats as $cat): ?>
-                    <option><?= $cat['name']; ?></option>
-                <?php endforeach; ?>
-            </select>
+            <h2>Результаты поиска по запросу <?= ''; ?></h2>
         </div>
+        <?php if (!empty($searchedData)): ?>
         <ul class="lots__list">
-            <?php foreach ($products as $key => $product): ?>
+            <?php foreach ($searchedData as $key => $product): ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
                         <img src="<?= $product['photo']; ?>" width="350" height="260" alt="Сноуборд">
@@ -47,7 +30,8 @@
             <?php endforeach; ?>
         </ul>
     </section>
-    <?php if (!empty($products)): ?>
-        <?= $pagination; ?>
+    <?= $pagination; ?>
+    <?php else: ?>
+        <p>по данному запросу нет результатов</p>
     <?php endif; ?>
 </main>

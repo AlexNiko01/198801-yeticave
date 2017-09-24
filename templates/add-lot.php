@@ -1,5 +1,4 @@
 <main>
-    <?= $catMenu;?>
     <form class="form form--add-lot container <?= !empty($errors) ? 'form--invalid' : '' ?>"
           action="/add.php" method="post" enctype="multipart/form-data" novalidate>
         <h2>Добавление лота</h2>

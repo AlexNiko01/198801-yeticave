@@ -66,7 +66,6 @@ function exec_query($mysqliConnect, $queryString, $arr = [])
         mysqli_stmt_close($stmt);
     }
 
-    mysqli_close($mysqliConnect);
     return $result;
 }
 
