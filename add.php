@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'models/bets.php';
 $mysqliConnect = returnMysqliConnect();
 $cats = select_data($mysqliConnect, 'SELECT * FROM categories');
 
