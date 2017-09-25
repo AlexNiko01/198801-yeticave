@@ -18,3 +18,14 @@ function isUserAuthenticated()
     return isset($_SESSION['id']);
 
 }
+
+function getAuthUser(){
+    global $mysqliConnect;
+    if(isUserAuthenticated()){
+        $id = $_SESSION['id'];
+        $authUserData = select_data($mysqliConnect, "SELECT * FROM users WHERE id = '$id'", $arr = []);
+        return $authUserData;
+    }else{
+        return false;
+    }
+}

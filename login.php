@@ -2,8 +2,6 @@
 session_start();
 require_once 'functions.php';
 $mysqliConnect = returnMysqliConnect();
-$cats = select_data($mysqliConnect, 'SELECT * FROM categories');
-$catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
 $rules = [
     'email' => [
         'required',
@@ -16,9 +14,7 @@ $rules = [
 $errors = formValidation($rules);
 $passwordErrorMessage = '';
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
-
     if (!empty($_POST)) {
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -34,5 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)) {
         }
     }
 }
-$content = getTemplate('templates/login.php', ['errors' => $errors, 'passwordErrorMessage' => $passwordErrorMessage,'catMenu'=>$catMenu]);
+$data = compact('errors','passwordErrorMessage');
+$content = getTemplate('templates/login.php', $data);
 renderLayout($content, 'Вход');

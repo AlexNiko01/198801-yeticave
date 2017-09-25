@@ -1,25 +1,7 @@
 <main class="container">
-    <section class="promo">
-        <h2 class="promo__title">Нужен стафф для катки?</h2>
-        <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное
-            снаряжение.</p>
-        <ul class="promo__list">
-            <?php foreach ($cats as $cat): ?>
-                <li class="promo__item promo__item--boards">
-                    <a class="promo__link" href="category.php?cat_id=<?= $cat['id']; ?>"
-                       style="background-image: url(../img/category-<?= $cat['id']; ?>.jpg);"><?= $cat['name']; ?></a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </section>
     <section class="lots">
         <div class="lots__header">
-            <h2>Открытые лоты</h2>
-            <select class="lots__select">
-                <?php foreach ($cats as $cat): ?>
-                    <option><?= $cat['name']; ?></option>
-                <?php endforeach; ?>
-            </select>
+            <h2>Все лоты в категории <?= $heading; ?></h2>
         </div>
         <ul class="lots__list">
             <?php foreach ($products as $key => $product): ?>
@@ -49,5 +31,7 @@
     </section>
     <?php if (!empty($products)): ?>
         <?= $pagination; ?>
+    <?php else: ?>
+        <p>В данной категории пока нет лотов</p>
     <?php endif; ?>
 </main>

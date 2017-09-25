@@ -1,5 +1,4 @@
 <main>
-    <?= $catMenu; ?>
     <section class="lot-item container">
         <h2><?= $product['title'] ?></h2>
         <div class="lot-item__content">
@@ -29,7 +28,7 @@
                                 <span class="lot-item__cost"><?= $product['start_price'] ?></span>
                             </div>
                             <div class="lot-item__min-cost">
-                                Мин. ставка <span><?= $product['rate_step'] ?></span>
+                                Мин. ставка <span><?= $product['rate_step'] ?? '100' ?></span>
                             </div>
                         </div>
                         <form class="lot-item__form" action="lot.php?id=<?= $_GET['id'] ?>" method="post">
@@ -43,7 +42,7 @@
                             </p>
                             <input id="lot-id" type="hidden" name="lot-id" value="<?= $_GET['id'] ?>">
                             <input id="lot_start_price" type="hidden" name="lot_start_price" value="<?= $product['start_price'] ?>">
-                            <input id="lot_rate_step" type="hidden" name="lot_rate_step" value="<?= $product['rate_step'] ?>">
+                            <input id="lot_rate_step" type="hidden" name="lot_rate_step" value="<?= $product['rate_step'] ?? '100' ?>">
                             <button type="submit" class="button">Сделать ставку</button>
                         </form>
                     </div>

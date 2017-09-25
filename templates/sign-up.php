@@ -1,6 +1,4 @@
 <main>
-    <?= $catMenu; ?>
-<!--    --><?php //var_dump($errors,$file_error_text); ?>
     <form class="form container <?= !empty($errors) ? 'form--invalid' : '' ?>" action="/sign-up.php" method="post" enctype="multipart/form-data" >
         <h2>Регистрация нового аккаунта</h2>
         <div class="form__item <?= key_exists('email', $errors) ? 'form__item--invalid' : ''; ?>">
@@ -59,6 +57,6 @@
         </div>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
         <button type="submit" class="button">Зарегистрироваться</button>
-        <a class="text-link" href="#">Уже есть аккаунт</a>
+        <a class="text-link" href="login.php">Уже есть аккаунт</a>
     </form>
 </main>

@@ -1,11 +1,8 @@
 <?php
 session_start();
 require_once 'functions.php';
-require_once 'models/bets.php';
 $mysqliConnect = returnMysqliConnect();
 $cats = select_data($mysqliConnect, 'SELECT * FROM categories');
-$catMenu = getTemplate('templates/cat-menu.php', ['cats' => $cats]);
-
 
 $rules = [
     'lot-name' => [
@@ -50,7 +47,8 @@ if (isUserAuthenticated()) {
         ]);
         header('Location: lot.php?id=' . $id);
     }
-    $content = getTemplate('templates/add-lot.php', ['cats' => $cats, 'errors' => $errors, 'file_error_text' => $file_error_text, 'catMenu' => $catMenu]);
+    $data = compact('cats', 'errors', 'file_error_text');
+    $content = getTemplate('templates/add-lot.php', $data);
     renderLayout($content, 'Добавление лота');
 
 } else {
